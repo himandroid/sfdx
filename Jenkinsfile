@@ -25,7 +25,7 @@ node {
 
     // withHome.groovy
 
-withHome(["HOME=${env.WORKSPACE}"]) {
+withEnv(["HOME=${env.WORKSPACE}"]) {
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
             if (isUnix()) {
