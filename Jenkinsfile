@@ -25,38 +25,6 @@ node {
 
     // withHome.groovy
 
-/**
- * Wrap given closure in a <code>withEnv</code> setting common sfdx env vars to the dir given by <code>home</code>
- * 
- * Home default value is env.WORKSPACE and if both are null the withHome does not map env vars.
- * 
- * <br>Env Vars assigned to home
- * 
- * <li>HOME
- * <li>APPDATA
- * <li>USERPROFILE
- * <li>XDG_DATA_HOME
- * </br>
- * @param home
- * @param additions - list of additional env vars to apply to doWithHome
- * @param doWithHome
- * @return
- */
-def call(home = null, additions = [], Closure doWithHome) {
-    if (doWithHome == null) {
-        error("withHome doWithHome closure cannot be null")
-    }
-    def useThisHome = home ?: env.WORKSPACE
-    def envParams = (useThisHome != null) ? [
-            "HOME=${useThisHome}",
-            "APPDATA=${useThisHome}",
-            "USERPROFILE=${useThisHome}",
-            "XDG_DATA_HOME=${useThisHome}"
-    ] : []
-    debug "home: ${home}, env.WORKSPACE: ${env.WORKSPACE}, useThisHome: ${useThisHome}, withHome envParams: ${envParams}"
-    envParams.addAll(additions)
-    return withEnv(envParams) { doWithHome.call(); }
-}
 withHome(["HOME=${env.WORKSPACE}"]) {
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
         stage('Deploye Code') {
